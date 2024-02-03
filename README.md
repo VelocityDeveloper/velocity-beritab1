@@ -1,7 +1,7 @@
-Velocity Liputan6
+Velocity Berita B1
 =================
 
-Child Theme for Liputan6
+Child Theme for Berita B1
 
 ### Preview
 https://beritab1.velocitydeveloper.com/
