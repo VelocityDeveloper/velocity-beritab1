@@ -30,10 +30,12 @@ $gridpost1  = velocitytheme_option('post_grid1');
 
         <div class="row m-0">
 
-            <!-- Do the left sidebar check -->
-            <?php do_action('justg_before_content'); ?>
+        <div class="content-area col-sm-8 order-2">
 
-            <main class="site-main col-md-8 order-2" id="main">
+            <!-- Do the left sidebar check -->
+            <?php //do_action('justg_before_content'); ?>
+
+            <main class="site-main col order-2" id="main">
 
                 <?php
                 if (have_posts()) {
@@ -41,11 +43,11 @@ $gridpost1  = velocitytheme_option('post_grid1');
                     $postcount = 1;
                     while (have_posts()) {
                         the_post();
-                ?>
+                 ?>
                         <article class="block-primary mb-4 border-bottom">
                             <?php if ($postcount === 1) : ?>
                                 <div class="post-tumbnail position-relative">
-                                    <div class="ratio ratio-16x9  rounded rounded-3 bg-light overflow-hidden">
+                                    <div class="ratio ratio-16x9 rounded rounded-3 bg-light overflow-hidden">
                                         <?php
                                         if (has_post_thumbnail()) {
                                             $img_atr = wp_get_attachment_image_src(get_post_thumbnail_id(), 'large');
@@ -74,10 +76,11 @@ $gridpost1  = velocitytheme_option('post_grid1');
                                 <div class="pt-3">
                                     <?php echo vdpost_carousel($carousel1, '6'); ?>
                                 </div>
-                                <?php
+                                <?php echo '<div class="w-100">';
                                 echo vdpost_feed($carousel1, '3');
                                 echo vdbanner('banner_home2');
                                 echo vdpost_grid($gridpost1, '3');
+                                echo '</div>';
                                 ?>
                             <?php else : ?>
                                 <div class="row">
@@ -136,9 +139,15 @@ $gridpost1  = velocitytheme_option('post_grid1');
                 <div class="text-center"><?php justg_pagination(); ?></div>
 
             </main><!-- #main -->
+            </div>
 
+            <div class="widget-area right-sidebar ps-md-3 pe-md-0 col-sm-4 order-3">
+                <?php do_action('justg_before_main_sidebar'); ?>
+                <?php dynamic_sidebar('main-sidebar'); ?>
+                <?php do_action('justg_after_main_sidebar'); ?>
             <!-- Do the right sidebar check. -->
-            <?php do_action('justg_after_content'); ?>
+            <?php //do_action('justg_after_content'); ?>
+            </div>
 
         </div><!-- .row -->
 
