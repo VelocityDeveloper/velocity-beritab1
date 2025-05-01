@@ -448,7 +448,7 @@ function vdpost_feed($idcat, $limit)
     if ($myquery->have_posts()) :
         ?>
         <?php while ($myquery->have_posts()) : $myquery->the_post(); ?>
-            <div class="row">
+            <div class="row mb-2">
                 <div class="col-12 col-md-4">
                     <div class="post-tumbnail position-relative">
                         <div class="ratio ratio-16x9 rounded rounded-3 bg-light overflow-hidden">

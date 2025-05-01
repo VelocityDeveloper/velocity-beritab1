@@ -193,13 +193,13 @@ function vdpost_marquee($atts)
         echo '<div class="headline-content gradient-theme bg-color-theme">';
         echo '<div class="text-marquee text-color-theme">Special Content</div>';
         echo '<div class="wrap-marquee">';
-            echo '<div class="ticker-headline">';
-                while ($the_query->have_posts()) : $the_query->the_post();
-                    echo '<div class="ticker-title me-2">';
-                    echo '<a class="text-white" href="' . get_the_permalink() . '">' . get_the_title() . '</a> - ';
-                    echo '</div>';
-                endwhile;
+        echo '<div class="ticker-headline">';
+        while ($the_query->have_posts()) : $the_query->the_post();
+            echo '<div class="ticker-title me-2">';
+            echo '<a class="text-white" href="' . get_the_permalink() . '">' . get_the_title() . '</a> - ';
             echo '</div>';
+        endwhile;
+        echo '</div>';
         echo '</div>';
         echo '</div>';
     endif;
@@ -211,8 +211,9 @@ function vdpost_marquee($atts)
 
 // [vdshare]
 add_shortcode('vdshare', 'vdshare');
-function vdshare($content)
+function vdshare($content = null)
 {
+    $content = $content ? $content : '';
     global $post;
     if (is_singular() || is_home()) {
 
