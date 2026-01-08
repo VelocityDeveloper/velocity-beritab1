@@ -151,14 +151,10 @@ small{
 	display: inline-block;
 	cursor: pointer;
 	color:#666;
+	background: transparent;
+	border: 0;
 }
-.vdcari .tombols.collapsed::after {
-	content: '\f00d';
-	font-size:20px;
-}
-.vdcari .tombols::after {
-	content: '\f002';
-	font-family: fontawesome;
+.vdcari .tombols i {
 	font-size:20px;
 }
 .vdcari .search-head{
@@ -199,13 +195,15 @@ small{
     color: #777;
 }
 #searchform:after {
-    content: '\f0d8';
-    font-family: fontawesome;
+    content: '';
     position: absolute;
-    top: -15px;
-    right: 10px;
-    font-size: 25px;
-    color: #fff;
+    top: -8px;
+    right: 12px;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 8px 8px 8px;
+    border-color: transparent transparent #fff transparent;
 }
 /*end cari*/
 

@@ -231,10 +231,10 @@ function vdshare($content = null)
 
         // Add sharing button at the end of page/page content
         $content .= '<div class="social-box text-end"><div class="social-btn">';
-        $content .= '<a class="btn btn-sm rounded-circle text-white me-2 mb-1 btn-facebook" href="' . $facebookURL . '" target="_blank" rel="nofollow" data-id="' . $post->ID . '"><span><i class="fa fa-facebook-square" aria-hidden="true"></i></span></a>';
-        $content .= '<a class="btn btn-sm rounded-circle text-white me-2 mb-1 btn-twitter" href="' . $twitterURL . '" target="_blank" rel="nofollow" data-id="' . $post->ID . '"><span><i class="fa fa-twitter" aria-hidden="true"></i></span></a>';
-        $content .= '<a class="btn btn-sm rounded-circle text-white me-2 mb-1 btn-telegram" href="' . $whatsappURL . '" target="_blank" rel="nofollow" data-id="' . $post->ID . '"><span><i class="fa fa-telegram" aria-hidden="true"></i></span></a>';
-        $content .= '<a class="btn btn-sm rounded-circle text-white me-2 mb-1 btn-whatsapp" href="' . $whatsappURL . '" target="_blank" rel="nofollow" data-id="' . $post->ID . '"><span><i class="fa fa-whatsapp" aria-hidden="true"></i></span></a>';
+        $content .= '<a class="btn btn-sm rounded-circle text-white me-2 mb-1 btn-facebook" href="' . $facebookURL . '" target="_blank" rel="nofollow" data-id="' . $post->ID . '"><span><i class="bi bi-facebook" aria-hidden="true"></i></span></a>';
+        $content .= '<a class="btn btn-sm rounded-circle text-white me-2 mb-1 btn-twitter" href="' . $twitterURL . '" target="_blank" rel="nofollow" data-id="' . $post->ID . '"><span><i class="bi bi-twitter" aria-hidden="true"></i></span></a>';
+        $content .= '<a class="btn btn-sm rounded-circle text-white me-2 mb-1 btn-telegram" href="' . $whatsappURL . '" target="_blank" rel="nofollow" data-id="' . $post->ID . '"><span><i class="bi bi-telegram" aria-hidden="true"></i></span></a>';
+        $content .= '<a class="btn btn-sm rounded-circle text-white me-2 mb-1 btn-whatsapp" href="' . $whatsappURL . '" target="_blank" rel="nofollow" data-id="' . $post->ID . '"><span><i class="bi bi-whatsapp" aria-hidden="true"></i></span></a>';
         $content .= '</div></div>';
 
         return $content;
@@ -250,12 +250,14 @@ function vdpencarian()
     ob_start(); ?>
     <div class="text-end">
         <div class="vdcari">
-            <span class="tombols"></span>
+            <button class="tombols" type="button" aria-label="<?php esc_attr_e('Toggle search', 'justg'); ?>">
+                <i class="bi bi-search" aria-hidden="true"></i>
+            </button>
             <form method="get" id="searchform" class="search-head" action="<?php echo esc_url(home_url('/')); ?>" role="search">
                 <div class="input-group">
                     <input class="search-input" id="s" name="s" type="text" placeholder="<?php esc_attr_e('Search&hellip;', 'vsstem'); ?>" value="<?php the_search_query(); ?>">
                     <button class="search-button" type="submit">
-                        <i class="fa fa-search" aria-hidden="true"></i>
+                        <i class="bi bi-search" aria-hidden="true"></i>
                     </button>
                 </div>
             </form>

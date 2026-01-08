@@ -20,11 +20,11 @@
     </div>
 
     <div class="row align-items-center text-center">
-        <div class="site-info">
+        <div class="site-info text-muted">
             <small>
                 © <?php echo date("Y"); ?> <?php echo get_bloginfo('name'); ?>. All Rights Reserved.
                 <br>
-                Design by <a class="text-secondary" href="https://velocitydeveloper.com" target="_blank" rel="noopener noreferrer">Velocity Developer</a>.
+                Design by <a class="text-muted" href="https://velocitydeveloper.com" target="_blank" rel="noopener noreferrer">Velocity Developer</a>.
             </small>
         </div>
         <!-- .site-info -->

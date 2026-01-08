@@ -6,93 +6,11 @@
  * @package vsstem
  */
 
-/**
- * Count number of widgets in a sidebar
- * Used to add classes to widget areas so widgets can be displayed one, two, three or four per row
- */
-// if (!function_exists('vsstem_slbd_count_widgets')) {
-//     function vsstem_slbd_count_widgets($sidebar_id)
-//     {
-//         // If loading from front page, consult $_wp_sidebars_widgets rather than options
-//         // to see if wp_convert_widget_settings() has made manipulations in memory.
-//         global $_wp_sidebars_widgets;
-//         if (empty($_wp_sidebars_widgets)) :
-//             $_wp_sidebars_widgets = get_option('sidebars_widgets', array());
-//         endif;
-
-//         $sidebars_widgets_count = $_wp_sidebars_widgets;
-
-//         if (isset($sidebars_widgets_count[$sidebar_id])) :
-//             $widget_count = count($sidebars_widgets_count[$sidebar_id]);
-//             $widget_classes = 'widget-count-' . count($sidebars_widgets_count[$sidebar_id]);
-//             return $widget_classes;
-//         endif;
-//     }
-// }
-
-// if (!function_exists('vsstem_widgets_init')) {
-//     /**
-//      * Initializes themes widgets.
-//      */
-//     function vsstem_widgets_init()
-//     {
-//         register_sidebar(array(
-//             'name'          => __('Footer 1', 'velocity-theme'),
-//             'id'            => 'footer1',
-//             'description'   => 'Footer Widget.',
-//             'before_widget'  => '<div id="%1$s" class="mb-4 footer-widget %2$s ' . vsstem_slbd_count_widgets('footerfull') . '">',
-//             'after_widget'   => '</div><!-- .footer-widget -->',
-//             'before_title'  => '<h3 class="velocity-title text-white mb-3"><span class="d-inline-block bg-colortheme py-1 px-3">',
-//             'after_title'   => '</span></h3>',
-//         ));
-//         register_sidebar(array(
-//             'name'          => __('Footer 2', 'velocity-theme'),
-//             'id'            => 'footer2',
-//             'description'   => 'Footer Widget.',
-//             'before_widget'  => '<div id="%1$s" class="mb-4 footer-widget %2$s ' . vsstem_slbd_count_widgets('footerfull') . '">',
-//             'after_widget'   => '</div><!-- .footer-widget -->',
-//             'before_title'  => '<h3 class="velocity-title text-white mb-3"><span class="d-inline-block bg-colortheme py-1 px-3">',
-//             'after_title'   => '</span></h3>',
-//         ));
-//         register_sidebar(array(
-//             'name'          => __('Footer 3', 'velocity-theme'),
-//             'id'            => 'footer3',
-//             'description'   => 'Footer Widget.',
-//             'before_widget'  => '<div id="%1$s" class="mb-4 footer-widget %2$s ' . vsstem_slbd_count_widgets('footerfull') . '">',
-//             'after_widget'   => '</div><!-- .footer-widget -->',
-//             'before_title'  => '<h3 class="velocity-title text-white mb-3"><span class="d-inline-block bg-colortheme py-1 px-3">',
-//             'after_title'   => '</span></h3>',
-//         ));
-// }
-// } // endif function_exists( 'vsstem_widgets_init' ).
-// add_action('widgets_init', 'vsstem_widgets_init');
-
 function remove_some_widgets()
 {
     unregister_sidebar('footer-widget-4');
 }
 add_action('widgets_init', 'remove_some_widgets', 11);
-function velocity_allpage()
-{
-    if (is_singular('post') && !current_user_can('administrator')) {
-        global $post;
-        $postID         = $post->ID;
-        $count_key      = 'hit';
-        $count          = get_post_meta($postID, $count_key, true);
-
-
-        if ($count == '') {
-            $count      = 0;
-            delete_post_meta($postID, $count_key);
-            add_post_meta($postID, $count_key, '0');
-        } else {
-            $count++;
-            update_post_meta($postID, $count_key, $count);
-        }
-    }
-}
-add_action('wp', 'velocity_allpage');
-
 
 
 
@@ -161,8 +79,6 @@ class velocity_posts_widget extends WP_Widget
                 $i++;
             }
             echo '</div>';
-        } else {
-            // no posts found
         }
         /* Restore original Post Data */
         wp_reset_postdata();
@@ -439,7 +355,7 @@ function velocity_post_tabs()
                         echo '<div class="col-8 col-sm-9 py-1">';
                         $vtitle = get_the_title();
                         echo '<div class="vtitle"><a class="text-dark secondary-font" href="' . get_the_permalink() . '">' . vdlimit_title(get_the_title(), 5) . '</a></div>';
-                        echo '<div class="text-muted"><small><i class="fa fa-calendar" aria-hidden="true"></i> ' . get_the_date('j F Y', get_the_ID()) . ' / <i class="fa fa-eye" aria-hidden="true"></i> ' . get_post_meta(get_the_ID(), 'hit', true) . '</small></div>';
+                        echo '<div class="text-muted"><small><i class="bi bi-calendar-event" aria-hidden="true"></i> ' . get_the_date('j F Y', get_the_ID()) . ' / <i class="bi bi-eye" aria-hidden="true"></i> ' . get_post_meta(get_the_ID(), 'hit', true) . '</small></div>';
                         echo '</div>';
                         echo '</div>';
                     ?>
@@ -462,7 +378,7 @@ function velocity_post_tabs()
                     <?php while ($wp_query2->have_posts()) : $wp_query2->the_post();
                         echo '<div class="row m-0 py-2 px-1">';
                         echo '<div class="col-4 col-sm-3 p-0">';
-                        echo '<div class="ratio ratio-4x3  rounded rounded-2 bg-light overflow-hidden">';
+                        echo '<div class="ratio ratio-4x3 rounded rounded-2 bg-light overflow-hidden">';
                         if (has_post_thumbnail()) {
                             $img_atr = wp_get_attachment_image_src(get_post_thumbnail_id(), 'large');
                             echo '<a href="' . get_the_permalink() . '"><img src="' . $img_atr[0] . '" alt="' . get_the_title() . '" /></a>';
@@ -474,7 +390,7 @@ function velocity_post_tabs()
                         echo '<div class="col-8 col-sm-9 py-1">';
                         $vtitle = get_the_title();
                         echo '<div class="vtitle"><a class="text-dark secondary-font" href="' . get_the_permalink() . '">' . vdlimit_title(get_the_title(), 5) . '</a></div>';
-                        echo '<div class="text-muted"><small><i class="fa fa-calendar" aria-hidden="true"></i> ' . get_the_date('j F Y', get_the_ID()) . '</small></div>';
+                        echo '<div class="text-muted"><small><i class="bi bi-calendar-event" aria-hidden="true"></i> ' . get_the_date('j F Y', get_the_ID()) . '</small></div>';
                         echo '</div>';
                         echo '</div>';
                     ?>
@@ -512,7 +428,7 @@ function velocity_post_tabs()
                         echo '<div class="col-8 col-sm-9 py-1">';
                         $vtitle = get_the_title();
                         echo '<div class="vtitle"><a class="text-dark secondary-font" href="' . get_the_permalink() . '">' . vdlimit_title(get_the_title(), 5) . '</a></div>';
-                        echo '<div class="text-muted"><small><i class="fa fa-calendar" aria-hidden="true"></i> ' . get_the_date('j F Y', get_the_ID()) . ' / <i class="fa fa-comments" aria-hidden="true"></i> ' . get_comments_number(get_the_ID()) . '</small></div>';
+                        echo '<div class="text-muted"><small><i class="bi bi-calendar-event" aria-hidden="true"></i> ' . get_the_date('j F Y', get_the_ID()) . ' / <i class="bi bi-chat-dots" aria-hidden="true"></i> ' . get_comments_number(get_the_ID()) . '</small></div>';
                         echo '</div>';
                         echo '</div>';
                     ?>

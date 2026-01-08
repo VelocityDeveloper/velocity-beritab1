@@ -6,7 +6,8 @@ jQuery(function($) {
 
     $( ".tombols" ).click(function() {
         $("#searchform").toggle();
-        $(".tombols").toggleClass( "collapsed" );
+        $(".tombols").toggleClass("collapsed");
+        $(".tombols i").toggleClass("bi-search bi-x");
     });
 
     function iklan_position(){
@@ -42,8 +43,8 @@ jQuery(function($) {
         slidesToShow: 3,
         slidesToScroll: 3,
         arrows: true,
-        prevArrow: '<div class="slick-prev"><i class="fa fa-angle-double-left  bg-white rounded rounded-5" aria-hidden="true"></i></div>',
-        nextArrow: '<div class="slick-next"><i class="fa fa-angle-double-right  bg-white rounded rounded-5" aria-hidden="true"></i></div>',
+        prevArrow: '<div class="slick-prev"><i class="bi bi-chevron-double-left bg-white rounded rounded-5" aria-hidden="true"></i></div>',
+        nextArrow: '<div class="slick-next"><i class="bi bi-chevron-double-right bg-white rounded rounded-5" aria-hidden="true"></i></div>',
         responsive: [
           {
             breakpoint: 600,
