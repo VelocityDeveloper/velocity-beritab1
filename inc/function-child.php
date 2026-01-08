@@ -23,230 +23,247 @@ function velocity_categories()
     return $cats;
 }
 
+function velocitychild_sanitize_checkbox($value)
+{
+    return $value ? 1 : 0;
+}
+
+function velocitychild_sanitize_category($value)
+{
+    if ($value === '' || $value === null) {
+        return '';
+    }
+
+    $value = absint($value);
+    if ($value === 0) {
+        return '';
+    }
+
+    $choices = velocity_categories();
+    return array_key_exists($value, $choices) ? $value : '';
+}
+
+function velocitychild_customize_register_berita(WP_Customize_Manager $wp_customize)
+{
+    $wp_customize->add_panel('panel_berita', [
+        'priority'    => 10,
+        'title'       => esc_html__('Berita Setting', 'justg'),
+        'description' => '',
+    ]);
+
+    $wp_customize->add_section('vd_theme_color', [
+        'panel'    => 'panel_berita',
+        'title'    => __('Theme Color', 'justg'),
+        'priority' => 10,
+    ]);
+
+    $wp_customize->add_setting('vd_color_setting', [
+        'default'           => '#ff5722',
+        'sanitize_callback' => 'sanitize_hex_color',
+    ]);
+
+    $wp_customize->add_control(new WP_Customize_Color_Control($wp_customize, 'vd_color_setting', [
+        'label'       => esc_html__('Color Theme', 'justg'),
+        'description' => '',
+        'section'     => 'vd_theme_color',
+        'priority'    => 10,
+    ]));
+
+    $wp_customize->add_section('iklan_float', [
+        'panel'    => 'panel_berita',
+        'title'    => __('Iklan Float', 'justg'),
+        'priority' => 10,
+    ]);
+
+    $wp_customize->add_setting('iklan_float_setting', [
+        'default'           => 1,
+        'sanitize_callback' => 'velocitychild_sanitize_checkbox',
+    ]);
+
+    $wp_customize->add_control('iklan_float_setting', [
+        'type'     => 'checkbox',
+        'label'    => esc_html__('Aktifkan Iklan Float', 'justg'),
+        'section'  => 'iklan_float',
+        'priority' => 10,
+    ]);
+
+    $wp_customize->add_setting('img_iklan_float_left', [
+        'default'           => '',
+        'sanitize_callback' => 'esc_url_raw',
+    ]);
+
+    $wp_customize->add_control(new WP_Customize_Image_Control($wp_customize, 'img_iklan_float_left', [
+        'label'       => esc_html__('Image Iklan Kiri', 'justg'),
+        'description' => '',
+        'section'     => 'iklan_float',
+        'priority'    => 20,
+    ]));
+
+    $wp_customize->add_setting('img_iklan_float_right', [
+        'default'           => '',
+        'sanitize_callback' => 'esc_url_raw',
+    ]);
+
+    $wp_customize->add_control(new WP_Customize_Image_Control($wp_customize, 'img_iklan_float_right', [
+        'label'       => esc_html__('Image Iklan Kanan', 'justg'),
+        'description' => '',
+        'section'     => 'iklan_float',
+        'priority'    => 30,
+    ]));
+
+    $wp_customize->add_section('setting_banner', [
+        'panel'    => 'panel_berita',
+        'title'    => __('Banner Setting', 'justg'),
+        'priority' => 10,
+    ]);
+
+    $wp_customize->add_setting('banner_header1', [
+        'default'           => '',
+        'sanitize_callback' => 'esc_url_raw',
+    ]);
+    $wp_customize->add_control(new WP_Customize_Image_Control($wp_customize, 'banner_header1', [
+        'label'       => esc_html__('Banner Header1', 'justg'),
+        'description' => '',
+        'section'     => 'setting_banner',
+        'priority'    => 10,
+    ]));
+
+    $wp_customize->add_setting('banner_header2', [
+        'default'           => '',
+        'sanitize_callback' => 'esc_url_raw',
+    ]);
+    $wp_customize->add_control(new WP_Customize_Image_Control($wp_customize, 'banner_header2', [
+        'label'       => esc_html__('Banner Header2', 'justg'),
+        'description' => '',
+        'section'     => 'setting_banner',
+        'priority'    => 20,
+    ]));
+
+    $wp_customize->add_setting('banner_arsip', [
+        'default'           => '',
+        'sanitize_callback' => 'esc_url_raw',
+    ]);
+    $wp_customize->add_control(new WP_Customize_Image_Control($wp_customize, 'banner_arsip', [
+        'label'       => esc_html__('Banner Archive', 'justg'),
+        'description' => '',
+        'section'     => 'setting_banner',
+        'priority'    => 30,
+    ]));
+
+    $wp_customize->add_setting('banner_single1', [
+        'default'           => '',
+        'sanitize_callback' => 'esc_url_raw',
+    ]);
+    $wp_customize->add_control(new WP_Customize_Image_Control($wp_customize, 'banner_single1', [
+        'label'       => esc_html__('Banner Single', 'justg'),
+        'description' => esc_html__('Tampil di bawah feature image.', 'justg'),
+        'section'     => 'setting_banner',
+        'priority'    => 40,
+    ]));
+
+    $wp_customize->add_setting('banner_single2', [
+        'default'           => '',
+        'sanitize_callback' => 'esc_url_raw',
+    ]);
+    $wp_customize->add_control(new WP_Customize_Image_Control($wp_customize, 'banner_single2', [
+        'label'       => esc_html__('Banner Single', 'justg'),
+        'description' => esc_html__('Tampil di bawah konten.', 'justg'),
+        'section'     => 'setting_banner',
+        'priority'    => 50,
+    ]));
+
+    $wp_customize->add_setting('banner_home1', [
+        'default'           => '',
+        'sanitize_callback' => 'esc_url_raw',
+    ]);
+    $wp_customize->add_control(new WP_Customize_Image_Control($wp_customize, 'banner_home1', [
+        'label'       => esc_html__('Banner Home', 'justg'),
+        'description' => esc_html__('Tampil di bawah slide pertama.', 'justg'),
+        'section'     => 'setting_banner',
+        'priority'    => 60,
+    ]));
+
+    $wp_customize->add_setting('banner_home2', [
+        'default'           => '',
+        'sanitize_callback' => 'esc_url_raw',
+    ]);
+    $wp_customize->add_control(new WP_Customize_Image_Control($wp_customize, 'banner_home2', [
+        'label'       => esc_html__('Banner Home', 'justg'),
+        'description' => '',
+        'section'     => 'setting_banner',
+        'priority'    => 70,
+    ]));
+
+    $wp_customize->add_section('setting_homepost', [
+        'panel'    => 'panel_berita',
+        'title'    => __('Berita Home', 'justg'),
+        'priority' => 10,
+    ]);
+
+    $wp_customize->add_setting('headline_post', [
+        'default'           => '',
+        'sanitize_callback' => 'velocitychild_sanitize_category',
+    ]);
+    $wp_customize->add_control('headline_post', [
+        'type'        => 'select',
+        'label'       => esc_html__('Headline Post', 'justg'),
+        'section'     => 'setting_homepost',
+        'priority'    => 10,
+        'choices'     => velocity_categories(),
+    ]);
+
+    $wp_customize->add_setting('post_carousel_home1', [
+        'default'           => '',
+        'sanitize_callback' => 'velocitychild_sanitize_category',
+    ]);
+    $wp_customize->add_control('post_carousel_home1', [
+        'type'     => 'select',
+        'label'    => esc_html__('Post Carousel', 'justg'),
+        'section'  => 'setting_homepost',
+        'priority' => 20,
+        'choices'  => velocity_categories(),
+    ]);
+
+    $wp_customize->add_setting('post_carousel_home2', [
+        'default'           => '',
+        'sanitize_callback' => 'velocitychild_sanitize_category',
+    ]);
+    $wp_customize->add_control('post_carousel_home2', [
+        'type'     => 'select',
+        'label'    => esc_html__('Post Carousel', 'justg'),
+        'section'  => 'setting_homepost',
+        'priority' => 30,
+        'choices'  => velocity_categories(),
+    ]);
+
+    $wp_customize->add_setting('post_grid1', [
+        'default'           => '',
+        'sanitize_callback' => 'velocitychild_sanitize_category',
+    ]);
+    $wp_customize->add_control('post_grid1', [
+        'type'     => 'select',
+        'label'    => esc_html__('Post Grid Home', 'justg'),
+        'section'  => 'setting_homepost',
+        'priority' => 40,
+        'choices'  => velocity_categories(),
+    ]);
+}
+add_action('customize_register', 'velocitychild_customize_register_berita');
+
+function velocitychild_output_customizer_css()
+{
+    $color = get_theme_mod('vd_color_setting', '#ff5722');
+    $color = sanitize_hex_color($color);
+    if (!$color) {
+        $color = '#ff5722';
+    }
+    echo '<style>:root{--color-theme:' . esc_html($color) . ';}.border-color-theme{--bs-border-color:' . esc_html($color) . ';}</style>';
+}
+add_action('wp_head', 'velocitychild_output_customizer_css');
+
 add_action('after_setup_theme', 'velocitychild_theme_setup', 9);
 function velocitychild_theme_setup()
 {
-
-
-    if (class_exists('Kirki')) :
-
-        /**
-         * Customizer control in child themes
-         * Sample Panel
-         * 
-         */
-        Kirki::add_panel('panel_berita', [
-            'priority'    => 10,
-            'title'       => esc_html__('Berita Setting', 'justg'),
-            'description' => esc_html__('', 'justg'),
-        ]);
-
-        // section color
-        Kirki::add_section('vd_theme_color', [
-            'panel'    => 'panel_berita',
-            'title'    => __('Theme Color', 'justg'),
-            'priority' => 10,
-        ]);
-        Kirki::add_field('justg_config', [
-            'type'        => 'color',
-            'settings' => 'vd_color_setting',
-            'label' => esc_html__('Color Theme', 'kirki'),
-            'description' => esc_html__('', 'kirki'),
-            'section' => 'vd_theme_color',
-            'default' => '#ff5722',
-            'transport' => 'auto',
-            'output' => [
-                [
-                    'element'   => ':root',
-                    'property'  => '--color-theme',
-                ],
-                [
-                    'element'   => '.border-color-theme',
-                    'property'  => '--bs-border-color',
-                ]
-            ],
-        ]);
-
-        // Section Iklan Float
-        Kirki::add_section('iklan_float', [
-            'panel'    => 'panel_berita',
-            'title'    => __('Iklan Float', 'justg'),
-            'priority' => 10,
-        ]);
-        Kirki::add_field('justg_config', [
-            'type'        => 'toggle',
-            'settings'    => 'iklan_float_setting',
-            'label'       => esc_html__('Aktifkan Iklan Float', 'kirki'),
-            'section'     => 'iklan_float',
-            'default'     => '1',
-            'priority'    => 10,
-        ]);
-        Kirki::add_field('justg_config', [
-            'type'        => 'image',
-            'settings'    => 'img_iklan_float_left',
-            'label'       => esc_html__('Image Iklan Kiri', 'kirki'),
-            'description' => esc_html__('', 'kirki'),
-            'section'     => 'iklan_float',
-            'default'     => '',
-        ]);
-        Kirki::add_field('justg_config', [
-            'type'        => 'image',
-            'settings'    => 'img_iklan_float_right',
-            'label'       => esc_html__('Image Iklan Kanan', 'kirki'),
-            'description' => esc_html__('', 'kirki'),
-            'section'     => 'iklan_float',
-            'default'     => '',
-        ]);
-
-
-        // Section Iklan
-        Kirki::add_section('setting_banner', [
-            'panel'    => 'panel_berita',
-            'title'    => __('Banner Setting', 'justg'),
-            'priority' => 10,
-        ]);
-        Kirki::add_field('justg_config', [
-            'type'        => 'image',
-            'settings'    => 'banner_header1',
-            'label'       => esc_html__('Banner Header1', 'kirki'),
-            'description' => esc_html__('', 'kirki'),
-            'section'     => 'setting_banner',
-            'default'     => '',
-        ]);
-        Kirki::add_field('justg_config', [
-            'type'        => 'image',
-            'settings'    => 'banner_header2',
-            'label'       => esc_html__('Banner Header2', 'kirki'),
-            'description' => esc_html__('', 'kirki'),
-            'section'     => 'setting_banner',
-            'default'     => '',
-        ]);
-        Kirki::add_field('justg_config', [
-            'type'        => 'image',
-            'settings'    => 'banner_arsip',
-            'label'       => esc_html__('Banner Archive', 'kirki'),
-            'description' => esc_html__('', 'kirki'),
-            'section'     => 'setting_banner',
-            'default'     => '',
-        ]);
-        Kirki::add_field('justg_config', [
-            'type'        => 'image',
-            'settings'    => 'banner_single1',
-            'label'       => esc_html__('Banner Single', 'kirki'),
-            'description' => esc_html__('Tampil di bawah feature image.', 'kirki'),
-            'section'     => 'setting_banner',
-            'default'     => '',
-        ]);
-        Kirki::add_field('justg_config', [
-            'type'        => 'image',
-            'settings'    => 'banner_single2',
-            'label'       => esc_html__('Banner Single', 'kirki'),
-            'description' => esc_html__('Tampil di bawah konten.', 'kirki'),
-            'section'     => 'setting_banner',
-            'default'     => '',
-        ]);
-        Kirki::add_field('justg_config', [
-            'type'        => 'image',
-            'settings'    => 'banner_home1',
-            'label'       => esc_html__('Banner Home', 'kirki'),
-            'description' => esc_html__('Tampil di bawah slide pertama.', 'kirki'),
-            'section'     => 'setting_banner',
-            'default'     => '',
-        ]);
-        Kirki::add_field('justg_config', [
-            'type'        => 'image',
-            'settings'    => 'banner_home2',
-            'label'       => esc_html__('Banner Home', 'kirki'),
-            'description' => esc_html__('', 'kirki'),
-            'section'     => 'setting_banner',
-            'default'     => '',
-        ]);
-
-
-        // Section Berita Home
-        Kirki::add_section('setting_homepost', [
-            'panel'    => 'panel_berita',
-            'title'    => __('Berita Home', 'justg'),
-            'priority' => 10,
-        ]);
-        Kirki::add_field('justg_config', [
-            'type'  => 'select',
-            'settings'  => 'headline_post',
-            'label'     => esc_html__('Headline Post', 'kirki'),
-            'section'   => 'setting_homepost',
-            'default'   => '',
-            'placeholder' => esc_html__('Pilih Kategori', 'kirki'),
-            'priority'  => 10,
-            'multiple'  => 1,
-            'choices'   => velocity_categories(),
-        ]);
-        Kirki::add_field('justg_config', [
-            'type'  => 'select',
-            'settings'  => 'post_carousel_home1',
-            'label'     => esc_html__('Post Carousel', 'kirki'),
-            'section'   => 'setting_homepost',
-            'default'   => '',
-            'placeholder' => esc_html__('Pilih Kategori', 'kirki'),
-            'priority'  => 10,
-            'multiple'  => 1,
-            'choices'   => velocity_categories(),
-        ]);
-        Kirki::add_field('justg_config', [
-            'type'  => 'select',
-            'settings'  => 'post_carousel_home2',
-            'label'     => esc_html__('Post Carousel', 'kirki'),
-            'section'   => 'setting_homepost',
-            'default'   => '',
-            'placeholder' => esc_html__('Pilih Kategori', 'kirki'),
-            'priority'  => 10,
-            'multiple'  => 1,
-            'choices'   => velocity_categories(),
-        ]);
-        Kirki::add_field('justg_config', [
-            'type'  => 'select',
-            'settings'  => 'post_grid1',
-            'label'     => esc_html__('Post Grid Home', 'kirki'),
-            'section'   => 'setting_homepost',
-            'default'   => '',
-            'placeholder' => esc_html__('Pilih Kategori', 'kirki'),
-            'priority'  => 10,
-            'multiple'  => 1,
-            'choices'   => velocity_categories(),
-        ]);
-
-    ///Section Sosmed
-    // Kirki::add_section('section_sosmedberita', [
-    //     'panel'    => 'panel_berita',
-    //     'title'    => __('Sosial Media', 'justg'),
-    //     'priority' => 10,
-    // ]);
-    // $fieldsosmed = [
-    //     'facebook'  => [
-    //         'label'    => 'Facebook',
-    //     ],
-    //     'twitter'  => [
-    //         'label'    => 'Twitter',
-    //     ],
-    //     'instagram'  => [
-    //         'label'    => 'Instagram',
-    //     ],
-    //     'youtube'  => [
-    //         'label'    => 'Youtube',
-    //     ]
-    // ];
-    // foreach ($fieldsosmed as $idfield => $datafield) {
-    //     Kirki::add_field('justg_config', [
-    //         'type'     => 'link',
-    //         'settings' => 'link_sosmed_' . $idfield,
-    //         'label'    => __('Link ' . $datafield['label'], 'kirki'),
-    //         'section'  => 'section_sosmedberita',
-    //         'default'  => 'https://' . $idfield . '.com/',
-    //         'priority' => 10,
-    //     ]);
-    // }
-
-    endif;
-
     $locations = array(
         'secondary-menu'   => __('Secondary Menu', 'justg'),
     );
