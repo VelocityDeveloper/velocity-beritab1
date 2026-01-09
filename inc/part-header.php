@@ -90,7 +90,7 @@ $bannertop2 = velocitytheme_option('banner_header2');
                 ?>
                 <!-- end custom logo -->
             </div>
-            <div class="col-3 p-0"><?php echo vdpencarian(); ?></div>
+            <div class="col-3 col-md-1 p-0"><?php echo vdpencarian(); ?></div>
         </div><!-- .row -->
 
         <div class="secondary-menuset py-1">
