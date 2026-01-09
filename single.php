@@ -16,7 +16,7 @@ $container  = velocitytheme_option('justg_container_type', 'container');
 <div class="wrapper" id="single-wrapper">
 
     <div class="<?php echo esc_attr($container); ?>" id="content" tabindex="-1">
-        <div class="row m-0">
+        <div class="row">
 
             <!-- Do the left sidebar check -->
             <?php do_action('justg_before_content'); ?>

@@ -43,6 +43,13 @@ small{
 	color: #373737;
 	border-radius: 3px;
 }
+#wrapper-content .widget-area {
+    padding-right: calc(var(--bs-gutter-x) * .5) !important;
+    padding-left: calc(var(--bs-gutter-x) * .5) !important;
+}
+.home #wrapper-content .widget-area {
+    max-width: 1000px !important;
+}
 
 @media only screen and (max-width: 768px) {
     html, body {
@@ -306,7 +313,7 @@ body.fl-builder-edit .iklanfloating {
     position: fixed;
     top: 0;
     width: 100%;
-    max-width: 968px !important;
+    max-width: 944px !important;
     z-index: 999;
 }
 .social-btn a {
@@ -327,18 +334,20 @@ body.fl-builder-edit .iklanfloating {
 .slick-next {
     right: 20px !important;
     z-index: 99;
+    top: 30%;
 }
 .slick-prev {
-    left: 5px !important;
+    left: 15px !important;
     z-index: 99;
+    top: 30%;
 }
 .slick-next::before, .slick-prev::before {
     display: none;
 }
 .slick-next i, .slick-prev i {
     color: #000;
-    font-size: 20px;
-    padding: 5px 10px;
+    font-size: 15px;
+    padding: 5px;
 }
 /* widget style */
 .widget-title{

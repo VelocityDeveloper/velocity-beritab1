@@ -1,5 +1,6 @@
-<footer class="site-footer container bg-light pt-5 py-2 px-3" id="colophon" style="text-align:inherit;">
-    <div class="row m-0">
+<footer class="site-footer bg-light pt-5 py-2 px-3" id="colophon" style="text-align:inherit;">
+    <div class="container bg-transparent">
+    <div class="row">
         <?php
         if (is_active_sidebar('footer-widget-1')) {
             echo '<div class="col-md-4 widget widget-footer">';
@@ -28,5 +29,6 @@
             </small>
         </div>
         <!-- .site-info -->
+    </div>
     </div>
 </footer>
