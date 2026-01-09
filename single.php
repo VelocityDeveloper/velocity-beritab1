@@ -48,7 +48,7 @@ $container  = velocitytheme_option('justg_container_type', 'container');
                                     ?>
                                 </div>
                                 <div class="col-6 d-none d-md-block p-0">
-                                    <?php echo do_shortcode('[vdshare]'); ?>
+                                    <?php echo vdshare(); ?>
                                 </div>
                             </div><!-- .entry-meta -->
 
@@ -90,7 +90,7 @@ $container  = velocitytheme_option('justg_container_type', 'container');
                         <?php endif; ?>
 
                         <div class="text-end">
-                            <?php echo  do_shortcode('[vdshare]'); ?>
+                            <?php echo vdshare(); ?>
                         </div>
                     </article><!-- #post-## -->
                 <?php

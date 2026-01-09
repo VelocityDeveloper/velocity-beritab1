@@ -23,8 +23,7 @@ require_once(get_stylesheet_directory() . '/widgets.php');
 $inc = get_stylesheet_directory() . '/inc';
 $includes = [
     'enqueue.php',
-    'function-child.php',
-    'shortcodes.php'
+    'function-child.php'
 ];
 
 foreach ($includes as $include) {

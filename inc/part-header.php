@@ -30,8 +30,8 @@ $bannertop2 = velocitytheme_option('banner_header2');
             ?>
             <!-- end custom logo -->
         </div>
-        <div class="col-md-6 p-md-0"><?php echo do_shortcode('[vdcari]'); ?></div>
-        <div class="col-md-3 p-md-0 text-end"><strong><?php echo do_shortcode('[vddate]'); ?></strong></div>
+        <div class="col-md-6 p-md-0"><?php echo vdcari(); ?></div>
+        <div class="col-md-3 p-md-0 text-end"><strong><?php echo vddate(); ?></strong></div>
     </div>
 
     <div class="header-position bg-white">
@@ -90,7 +90,7 @@ $bannertop2 = velocitytheme_option('banner_header2');
                 ?>
                 <!-- end custom logo -->
             </div>
-            <div class="col-1 p-0"><?php echo do_shortcode('[vd-pencarian]'); ?></div>
+            <div class="col-1 p-0"><?php echo vdpencarian(); ?></div>
         </div><!-- .row -->
 
         <div class="secondary-menuset py-1">
@@ -117,7 +117,7 @@ $bannertop2 = velocitytheme_option('banner_header2');
     </div>
 
     <div>
-        <?php echo do_shortcode('[vdpost-marquee]'); ?>
+        <?php echo vdpost_marquee(); ?>
     </div>
 
     <?php if ($bannertop2) : ?>
