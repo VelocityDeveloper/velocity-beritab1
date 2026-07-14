@@ -7,4 +7,5 @@ yarn-error.log
 /.idea
 /.vscode
 /.zed
-dist
+/dist
+*.zip

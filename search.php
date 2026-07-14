@@ -11,7 +11,7 @@ defined('ABSPATH') || exit;
 
 get_header();
 
-$container = velocitytheme_option('justg_container_type', 'container');
+$container = velocitychild_get_option('justg_container_type', 'container');
 ?>
 
 <div class="wrapper" id="search-wrapper">

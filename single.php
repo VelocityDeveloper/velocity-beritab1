@@ -10,7 +10,7 @@
 defined('ABSPATH') || exit;
 
 get_header();
-$container  = velocitytheme_option('justg_container_type', 'container');
+$container  = velocitychild_get_option('justg_container_type', 'container');
 ?>
 
 <div class="wrapper" id="single-wrapper">
@@ -39,10 +39,11 @@ $container  = velocitytheme_option('justg_container_type', 'container');
                                     <?php //justg_posted_on(); 
                                     echo '<div class="d-flex">';
                                     echo '<div class="me-2 d-inline-block"><img class="rounded rounded-5" src="' . get_avatar_url(get_the_author_ID(), array("size" => 40)) . '"/></div>';
-                                    echo '<div class="ms-2 d-inline-block" style="color:#787878;">';
-                                    echo '<small>' . the_author_meta('user_nicename', get_the_author_ID()) . '</small><br/>';
+                                    echo '<div class="ms-2 d-inline-block text-muted">';
+                                    echo '<small>' . esc_html(get_the_author_meta('display_name', get_the_author_ID())) . '</small><br/>';
                                     echo '<small>' . get_the_date() . '</small>';
-                                    echo '<small><span class="view-post ms-2">' . get_post_meta(get_the_ID(), 'hit', true) . ' views</span></small>';
+                                    echo '<small class="mx-2">|</small>';
+                                    echo '<small><span class="view-post">' . get_post_meta(get_the_ID(), 'hit', true) . ' views</span></small>';
                                     echo '</div>';
                                     echo '</div>';
                                     ?>
@@ -55,13 +56,13 @@ $container  = velocitytheme_option('justg_container_type', 'container');
                         </header><!-- .entry-header -->
 
                         <?php
-                        if (has_post_thumbnail($post->ID)) :
-                            $full_url   = wp_get_attachment_url(get_post_thumbnail_id(get_the_ID()));
-                            $caption    = get_the_post_thumbnail_caption();
-                            echo '<div class="imgfeature-single py-2 mb-2">';
-                            echo '<img class="w-100 mb-2" src="' . $full_url . '" loading="lazy">';
-                            echo '<small style="color:#787878;">' . $caption . '</small></div>';
-                        endif;
+                        $caption = has_post_thumbnail() ? get_the_post_thumbnail_caption() : '';
+                        echo '<figure class="featured-media py-2 mb-2">';
+                        echo velocitychild_post_thumbnail(null, 'full', '16x9', 'bg-light');
+                        if ($caption) {
+                            echo '<figcaption class="small text-muted mt-2">' . wp_kses_post($caption) . '</figcaption>';
+                        }
+                        echo '</figure>';
                         echo '<div class="mb-3 text-center">' . vdbanner('banner_single1') . '</div>';
                         ?>
 
@@ -89,7 +90,7 @@ $container  = velocitytheme_option('justg_container_type', 'container');
                             </div>
                         <?php endif; ?>
 
-                        <div class="text-end">
+                        <div class="text-end mb-3">
                             <?php echo vdshare(); ?>
                         </div>
                     </article><!-- #post-## -->

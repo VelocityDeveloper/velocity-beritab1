@@ -1,10 +1,10 @@
 <?php
-$bannertop1 = velocitytheme_option('banner_header1');
-$bannertop2 = velocitytheme_option('banner_header2');
+$bannertop1 = velocitychild_get_option('banner_header1');
+$bannertop2 = velocitychild_get_option('banner_header2');
 ?>
 <div class="container">
     <?php if ($bannertop1) : ?>
-        <div class="banner-header pb-2">
+        <div class="header-media pb-2">
             <?php echo vdbanner('banner_header1'); ?>
         </div>
     <?php endif; ?>
@@ -56,11 +56,11 @@ $bannertop2 = velocitytheme_option('banner_header2');
                                     'theme_location'  => 'primary',
                                     'container_class' => 'offcanvas-body',
                                     'container_id'    => '',
-                                    'menu_class'      => 'navbar-nav justify-content-end flex-grow-1 pe-3',
+                                    'menu_class'      => 'navbar-nav justify-content-start flex-grow-1 flex-wrap pe-3',
                                     'fallback_cb'     => '',
                                     'menu_id'         => 'main-menu',
                                     'depth'           => 4,
-                                    'walker'          => new justg_WP_Bootstrap_Navwalker(),
+                                    'walker'          => class_exists('justg_WP_Bootstrap_Navwalker') ? new justg_WP_Bootstrap_Navwalker() : '',
                                 )
                             );
                             ?>
@@ -90,7 +90,7 @@ $bannertop2 = velocitytheme_option('banner_header2');
                 ?>
                 <!-- end custom logo -->
             </div>
-            <div class="col-3 col-md-1 p-0"><?php echo vdpencarian(); ?></div>
+            <div class="col-3 col-md-1 p-0 d-flex align-items-center justify-content-end"><?php echo vdpencarian(); ?></div>
         </div><!-- .row -->
 
         <div class="secondary-menuset py-1">
@@ -121,7 +121,7 @@ $bannertop2 = velocitytheme_option('banner_header2');
     </div>
 
     <?php if ($bannertop2) : ?>
-        <div class="banner-header pt-3">
+        <div class="header-media pt-3">
             <?php echo vdbanner('banner_header2'); ?>
         </div>
     <?php endif; ?>

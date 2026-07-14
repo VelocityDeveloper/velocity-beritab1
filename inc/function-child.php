@@ -7,6 +7,54 @@ if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly.
 }
 
+if (!function_exists('velocitychild_get_option')) {
+    function velocitychild_get_option($setting, $default = '')
+    {
+        return function_exists('velocitytheme_option')
+            ? velocitytheme_option($setting, $default)
+            : get_theme_mod($setting, $default);
+    }
+}
+
+if (!function_exists('velocitychild_post_thumbnail')) {
+    function velocitychild_post_thumbnail($post_id = null, $size = 'large', $ratio = '16x9', $class = '')
+    {
+        $post_id = $post_id ?: get_the_ID();
+        $title   = get_the_title($post_id);
+        $image   = get_the_post_thumbnail_url($post_id, $size);
+        $image   = $image ?: get_stylesheet_directory_uri() . '/img/no-image.webp';
+
+        return sprintf(
+            '<div class="ratio ratio-%1$s overflow-hidden %2$s"><a class="d-block w-100 h-100" href="%3$s" aria-label="%4$s"><img class="w-100 h-100 object-fit-cover" src="%5$s" alt="%6$s" loading="lazy"></a></div>',
+            esc_attr($ratio), esc_attr(trim($class)), esc_url(get_permalink($post_id)),
+            esc_attr($title), esc_url($image), esc_attr($title)
+        );
+    }
+}
+
+if (!function_exists('velocitychild_icon')) {
+    function velocitychild_icon($name, $class = '')
+    {
+        $icons = [
+            'search'   => '<path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>',
+            'calendar' => '<path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"/>',
+            'eye'      => '<path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8C2.46 5.96 4.76 3.5 8 3.5S13.54 5.96 14.827 8C13.54 10.04 11.24 12.5 8 12.5S2.46 10.04 1.173 8"/><path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5"/>',
+            'chat'     => '<path d="M2.678 11.894 1.4 14.443a.5.5 0 0 0 .66.68l2.694-1.207A7 7 0 1 0 2.678 11.894M8 14a6 6 0 1 1 0-12 6 6 0 0 1 0 12"/>',
+            'x'        => '<path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>',
+            'facebook' => '<path d="M16 8.049C16 3.603 12.418 0 8 0S0 3.603 0 8.049C0 12.067 2.925 15.397 6.75 16v-5.624H4.718V8.049H6.75V6.276c0-2.017 1.194-3.131 3.022-3.131.875 0 1.79.157 1.79.157v1.981h-1.009c-.994 0-1.303.621-1.303 1.258v1.508h2.219l-.355 2.327H9.25V16C13.075 15.397 16 12.067 16 8.049"/>',
+            'twitter'  => '<path d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334q0-.211-.006-.423A6.7 6.7 0 0 0 16 3.542a6.7 6.7 0 0 1-1.889.518 3.3 3.3 0 0 0 1.447-1.817 6.5 6.5 0 0 1-2.084.797A3.286 3.286 0 0 0 7.875 6.03 9.32 9.32 0 0 1 1.108 2.6a3.29 3.29 0 0 0 1.016 4.382A3.3 3.3 0 0 1 .64 6.575v.045a3.29 3.29 0 0 0 2.632 3.218 3.2 3.2 0 0 1-.865.115q-.312 0-.617-.06a3.28 3.28 0 0 0 3.067 2.277A6.59 6.59 0 0 1 .78 13.58a6 6 0 0 1-.78-.045A9.34 9.34 0 0 0 5.026 15"/>',
+            'telegram' => '<path d="M16 3.038c0-.987-.905-1.692-1.822-1.338L.986 6.786c-1.288.497-1.263 1.303-.218 1.624l3.385 1.057 7.836-4.945c.37-.225.71-.104.432.143l-6.35 5.733-.247 3.69c.362 0 .522-.166.724-.364l1.738-1.69 3.617 2.67c.667.368 1.145.179 1.311-.619z"/>',
+            'whatsapp' => '<path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93a7.9 7.9 0 0 0-2.327-5.607M7.998 14.521a6.56 6.56 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.25a6.56 6.56 0 1 1 5.58 3.093m3.6-4.922c-.197-.099-1.17-.578-1.353-.642-.181-.066-.314-.099-.445.099-.133.197-.512.642-.63.775-.115.132-.23.148-.428.05-.197-.1-.833-.307-1.587-.98a6 6 0 0 1-1.097-1.364c-.115-.198-.012-.305.087-.403.088-.088.197-.23.296-.346.1-.115.132-.197.197-.33.066-.132.033-.247-.016-.346-.05-.099-.445-1.074-.611-1.47-.16-.389-.323-.335-.445-.34h-.38a.73.73 0 0 0-.528.247c-.181.198-.692.677-.692 1.654s.71 1.916.81 2.049c.098.132 1.397 2.132 3.383 2.992.473.205.842.327 1.13.418.475.151.907.13 1.25.079.38-.058 1.171-.48 1.337-.943.164-.462.164-.858.115-.943-.05-.082-.181-.13-.38-.23"/>',
+        ];
+
+        if (!isset($icons[$name])) {
+            return '';
+        }
+
+        return '<svg class="bi ' . esc_attr($class) . '" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">' . $icons[$name] . '</svg>';
+    }
+}
+
 function velocity_categories()
 {
     $args = array(
@@ -27,11 +75,10 @@ function vdcari()
 {
     ob_start(); ?>
     <div class="pencarian">
-        <form role="search" method="get" class="search-form">
-            <div class="form-group">
-                <input type="text" name="s" class="form-control" placeholder="Search">
-            </div>
-            <button type="submit" class="btn btn-sm btn-search gradient-theme bg-color-theme text-white">Search</button>
+        <form role="search" method="get" class="search-form input-group" action="<?php echo esc_url(home_url('/')); ?>">
+            <label class="visually-hidden" for="header-search"><?php esc_html_e('Search', 'justg'); ?></label>
+            <input id="header-search" type="search" name="s" class="form-control" value="<?php echo esc_attr(get_search_query()); ?>" placeholder="<?php esc_attr_e('Search', 'justg'); ?>" required>
+            <button type="submit" class="btn btn-search gradient-theme bg-color-theme text-white"><?php echo velocitychild_icon('search'); ?></button>
         </form>
     </div>
 <?php
@@ -51,7 +98,7 @@ function vdpost_marquee($args = [])
 {
     ob_start();
     $defaults = [
-        'category' => velocitytheme_option('headline_post'),
+        'category' => velocitychild_get_option('headline_post'),
         'limit'    => 5,
     ];
     $args = array_merge($defaults, is_array($args) ? $args : []);
@@ -111,10 +158,10 @@ function vdshare($content = '')
 
         // Add sharing button at the end of page/page content
         $content .= '<div class="social-box text-end"><div class="social-btn">';
-        $content .= '<a class="btn btn-sm rounded-circle text-white me-2 mb-1 btn-facebook" href="' . $facebookURL . '" target="_blank" rel="nofollow" data-id="' . $post->ID . '"><span><i class="bi bi-facebook" aria-hidden="true"></i></span></a>';
-        $content .= '<a class="btn btn-sm rounded-circle text-white me-2 mb-1 btn-twitter" href="' . $twitterURL . '" target="_blank" rel="nofollow" data-id="' . $post->ID . '"><span><i class="bi bi-twitter" aria-hidden="true"></i></span></a>';
-        $content .= '<a class="btn btn-sm rounded-circle text-white me-2 mb-1 btn-telegram" href="' . $whatsappURL . '" target="_blank" rel="nofollow" data-id="' . $post->ID . '"><span><i class="bi bi-telegram" aria-hidden="true"></i></span></a>';
-        $content .= '<a class="btn btn-sm rounded-circle text-white me-2 mb-1 btn-whatsapp" href="' . $whatsappURL . '" target="_blank" rel="nofollow" data-id="' . $post->ID . '"><span><i class="bi bi-whatsapp" aria-hidden="true"></i></span></a>';
+        $content .= '<a class="btn btn-sm rounded-circle text-white me-2 mb-1 btn-facebook" href="' . $facebookURL . '" target="_blank" rel="nofollow" data-id="' . $post->ID . '"><span>' . velocitychild_icon('facebook') . '</span></a>';
+        $content .= '<a class="btn btn-sm rounded-circle text-white me-2 mb-1 btn-twitter" href="' . $twitterURL . '" target="_blank" rel="nofollow" data-id="' . $post->ID . '"><span>' . velocitychild_icon('twitter') . '</span></a>';
+        $content .= '<a class="btn btn-sm rounded-circle text-white me-2 mb-1 btn-telegram" href="' . $teleramURL . '" target="_blank" rel="nofollow" data-id="' . $post->ID . '"><span>' . velocitychild_icon('telegram') . '</span></a>';
+        $content .= '<a class="btn btn-sm rounded-circle text-white me-2 mb-1 btn-whatsapp" href="' . $whatsappURL . '" target="_blank" rel="nofollow" data-id="' . $post->ID . '"><span>' . velocitychild_icon('whatsapp') . '</span></a>';
         $content .= '</div></div>';
 
         return $content;
@@ -129,13 +176,14 @@ function vdpencarian()
     <div class="text-end">
         <div class="vdcari">
             <button class="tombols" type="button" aria-label="<?php esc_attr_e('Toggle search', 'justg'); ?>">
-                <i class="bi bi-search" aria-hidden="true"></i>
+                <span class="search-symbol"><?php echo velocitychild_icon('search'); ?></span>
+                <span class="close-symbol d-none"><?php echo velocitychild_icon('x'); ?></span>
             </button>
             <form method="get" id="searchform" class="search-head" action="<?php echo esc_url(home_url('/')); ?>" role="search">
                 <div class="input-group">
-                    <input class="search-input" id="s" name="s" type="text" placeholder="<?php esc_attr_e('Search&hellip;', 'vsstem'); ?>" value="<?php the_search_query(); ?>">
+                    <input class="search-input" id="s" name="s" type="text" placeholder="<?php esc_attr_e('Search&hellip;', 'vsstem'); ?>" value="<?php the_search_query(); ?>" required>
                     <button class="search-button" type="submit">
-                        <i class="bi bi-search" aria-hidden="true"></i>
+                        <?php echo velocitychild_icon('search'); ?>
                     </button>
                 </div>
             </form>
@@ -171,24 +219,6 @@ function velocitychild_customize_register_berita(WP_Customize_Manager $wp_custom
         'title'       => esc_html__('Berita Setting', 'justg'),
         'description' => '',
     ]);
-
-    $wp_customize->add_section('vd_theme_color', [
-        'panel'    => 'panel_berita',
-        'title'    => __('Theme Color', 'justg'),
-        'priority' => 10,
-    ]);
-
-    $wp_customize->add_setting('vd_color_setting', [
-        'default'           => '#ff5722',
-        'sanitize_callback' => 'sanitize_hex_color',
-    ]);
-
-    $wp_customize->add_control(new WP_Customize_Color_Control($wp_customize, 'vd_color_setting', [
-        'label'       => esc_html__('Color Theme', 'justg'),
-        'description' => '',
-        'section'     => 'vd_theme_color',
-        'priority'    => 10,
-    ]));
 
     $wp_customize->add_section('iklan_float', [
         'panel'    => 'panel_berita',
@@ -373,10 +403,10 @@ add_action('customize_register', 'velocitychild_customize_register_berita');
 
 function velocitychild_output_customizer_css()
 {
-    $color = get_theme_mod('vd_color_setting', '#ff5722');
+    $color = velocitychild_get_option('primary_color', '#740106');
     $color = sanitize_hex_color($color);
     if (!$color) {
-        $color = '#ff5722';
+        $color = '#740106';
     }
     echo '<style>:root{--color-theme:' . esc_html($color) . ';}.border-color-theme{--bs-border-color:' . esc_html($color) . ';}</style>';
 }
@@ -417,13 +447,13 @@ function footer_vd_additional()
     $widthcon    = '968px';
 
     foreach (['left', 'right'] as $keye) {
-        if (true == velocitytheme_option('iklan_float_setting', true)) :
-            $imgiklan    = velocitytheme_option('img_iklan_float_' . $keye);
+        if (true == velocitychild_get_option('iklan_float_setting', true)) :
+            $imgiklan    = velocitychild_get_option('img_iklan_float_' . $keye);
             if ($imgiklan) :
-                echo '<div class="iklanfloating" data-pos="' . $keye . '" data-container="' . $widthcon . '">';
+                echo '<div class="floating-media" data-pos="' . esc_attr($keye) . '" data-container="' . esc_attr($widthcon) . '">';
                 echo '<div class="position-relative">';
-                echo '<div class="close-iklan position-absolute top-0 end-0">Tutup</div>';
-                echo '<span><img src="' . $imgiklan . '" loading="lazy"></span>';
+                echo '<button type="button" class="dismiss-media position-absolute top-0 end-0 mt-3 me-3" aria-label="' . esc_attr__('Close', 'justg') . '">' . velocitychild_icon('x') . '</button>';
+                echo '<span><img src="' . esc_url($imgiklan) . '" alt="" loading="lazy"></span>';
                 echo '</div>';
                 echo '</div>';
             endif;
@@ -455,9 +485,10 @@ function vdlimit_title($text, $limit)
 // banner func
 function vdbanner($sett)
 {
-    $img = velocitytheme_option($sett);
+    $banner = '';
+    $img = velocitychild_get_option($sett);
     if ($img) :
-        $banner = '<div class="text-center"><img src="' . $img . '" /></div>';
+        $banner = '<div class="text-center"><img src="' . esc_url($img) . '" alt="" loading="lazy"></div>';
     endif;
     return $banner;
 }
@@ -472,9 +503,9 @@ function vel_post_nav()
         return;
     }
 ?>
-    <nav class="container p-0 navigation post-navigation block-primary">
-        <h2 class="sr-only"><?php esc_html_e('Post navigation', 'justg'); ?></h2>
-        <div class="d-flex py-2 nav-links justify-content-between post-nav border-top border-bottom">
+    <nav class="container p-0 navigation block-primary">
+        <h2 class="visually-hidden"><?php esc_html_e('Post navigation', 'justg'); ?></h2>
+        <div class="d-flex gap-3 py-2 nav-links justify-content-between post-nav border-top border-bottom">
             <?php
             if (get_previous_post_link()) {
                 previous_post_link('<span class="nav-previous">%link</span>', _x('%title', 'Previous post link', 'justg'));
@@ -517,16 +548,7 @@ function vdpost_related()
         while ($related_query->have_posts()) :
             $related_query->the_post(); ?>
             <div class="col-md-4 col-6 px-md-2 p-2">
-                <div class="relate-thumb ratio ratio-16x9">
-                    <?php
-                    if (has_post_thumbnail()) {
-                        $img_atr = wp_get_attachment_image_src(get_post_thumbnail_id(), 'large');
-                        echo '<a href="' . get_the_permalink() . '"><img class="rounded rounded-2" src="' . $img_atr[0] . '" alt="' . get_the_title() . '" /></a>';
-                    } else {
-                        echo '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 60 60" style="background-color: #ececec;width: 100%;height: auto;enable-background:new 0 0 60 60;" xml:space="preserve" width="' . $width . '" height="' . $height . '"><g><g><path d="M55.201,15.5h-8.524l-4-10H17.323l-4,10H12v-5H6v5H4.799C2.152,15.5,0,17.652,0,20.299v29.368   C0,52.332,2.168,54.5,4.833,54.5h50.334c2.665,0,4.833-2.168,4.833-4.833V20.299C60,17.652,57.848,15.5,55.201,15.5z M8,12.5h2v3H8   V12.5z M58,49.667c0,1.563-1.271,2.833-2.833,2.833H4.833C3.271,52.5,2,51.229,2,49.667V20.299C2,18.756,3.256,17.5,4.799,17.5H6h6   h2.677l4-10h22.646l4,10h9.878c1.543,0,2.799,1.256,2.799,2.799V49.667z" data-original="#000000" class="active-path" data-old_color="#000000" fill="#5F7D95"/><path d="M30,14.5c-9.925,0-18,8.075-18,18s8.075,18,18,18s18-8.075,18-18S39.925,14.5,30,14.5z M30,48.5c-8.822,0-16-7.178-16-16   s7.178-16,16-16s16,7.178,16,16S38.822,48.5,30,48.5z" data-original="#000000" class="active-path" data-old_color="#000000" fill="#5F7D95"/><path d="M30,20.5c-6.617,0-12,5.383-12,12s5.383,12,12,12s12-5.383,12-12S36.617,20.5,30,20.5z M30,42.5c-5.514,0-10-4.486-10-10   s4.486-10,10-10s10,4.486,10,10S35.514,42.5,30,42.5z" data-original="#000000" class="active-path" data-old_color="#000000" fill="#5F7D95"/><path d="M52,19.5c-2.206,0-4,1.794-4,4s1.794,4,4,4s4-1.794,4-4S54.206,19.5,52,19.5z M52,25.5c-1.103,0-2-0.897-2-2s0.897-2,2-2   s2,0.897,2,2S53.103,25.5,52,25.5z" data-original="#000000" class="active-path" data-old_color="#000000" fill="#5F7D95"/></g></g> </svg>';
-                    }
-                    ?>
-                </div>
+                <?php echo velocitychild_post_thumbnail(null, 'large', '16x9', 'rounded rounded-2 bg-light'); ?>
                 <span class="fw-bold"><a href="<?php echo get_the_permalink(); ?>"><?php echo vdlimit_title(get_the_title(), 6); ?></a></span>
             </div>
         <?php
@@ -553,16 +575,7 @@ function vdpost_carousel($catid, $limit)
         while ($related_query->have_posts()) :
             $related_query->the_post(); ?>
             <div class="carousel-items px-2">
-                <div class="relate-thumb ratio ratio-16x9">
-                    <?php
-                    if (has_post_thumbnail()) {
-                        $img_atr = wp_get_attachment_image_src(get_post_thumbnail_id(), 'large');
-                        echo '<a href="' . get_the_permalink() . '"><img class="rounded rounded-2" src="' . $img_atr[0] . '" alt="' . get_the_title() . '" /></a>';
-                    } else {
-                        echo '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 60 60" style="background-color: #ececec;width: 100%;height: auto;enable-background:new 0 0 60 60;" xml:space="preserve" width="' . $width . '" height="' . $height . '"><g><g><path d="M55.201,15.5h-8.524l-4-10H17.323l-4,10H12v-5H6v5H4.799C2.152,15.5,0,17.652,0,20.299v29.368   C0,52.332,2.168,54.5,4.833,54.5h50.334c2.665,0,4.833-2.168,4.833-4.833V20.299C60,17.652,57.848,15.5,55.201,15.5z M8,12.5h2v3H8   V12.5z M58,49.667c0,1.563-1.271,2.833-2.833,2.833H4.833C3.271,52.5,2,51.229,2,49.667V20.299C2,18.756,3.256,17.5,4.799,17.5H6h6   h2.677l4-10h22.646l4,10h9.878c1.543,0,2.799,1.256,2.799,2.799V49.667z" data-original="#000000" class="active-path" data-old_color="#000000" fill="#5F7D95"/><path d="M30,14.5c-9.925,0-18,8.075-18,18s8.075,18,18,18s18-8.075,18-18S39.925,14.5,30,14.5z M30,48.5c-8.822,0-16-7.178-16-16   s7.178-16,16-16s16,7.178,16,16S38.822,48.5,30,48.5z" data-original="#000000" class="active-path" data-old_color="#000000" fill="#5F7D95"/><path d="M30,20.5c-6.617,0-12,5.383-12,12s5.383,12,12,12s12-5.383,12-12S36.617,20.5,30,20.5z M30,42.5c-5.514,0-10-4.486-10-10   s4.486-10,10-10s10,4.486,10,10S35.514,42.5,30,42.5z" data-original="#000000" class="active-path" data-old_color="#000000" fill="#5F7D95"/><path d="M52,19.5c-2.206,0-4,1.794-4,4s1.794,4,4,4s4-1.794,4-4S54.206,19.5,52,19.5z M52,25.5c-1.103,0-2-0.897-2-2s0.897-2,2-2   s2,0.897,2,2S53.103,25.5,52,25.5z" data-original="#000000" class="active-path" data-old_color="#000000" fill="#5F7D95"/></g></g> </svg>';
-                    }
-                    ?>
-                </div>
+                <?php echo velocitychild_post_thumbnail(null, 'large', '16x9', 'rounded rounded-2 bg-light'); ?>
                 <span class="fw-bold"><a href="<?php echo get_the_permalink(); ?>"><?php echo vdlimit_title(get_the_title(), 6); ?></a></span>
             </div>
         <?php
@@ -586,18 +599,10 @@ function vdpost_feed($idcat, $limit)
     if ($myquery->have_posts()) :
         ?>
         <?php while ($myquery->have_posts()) : $myquery->the_post(); ?>
-            <div class="row mb-2">
+            <div class="row mb-3">
                 <div class="col-4">
                     <div class="post-tumbnail position-relative">
-                        <div class="ratio ratio-16x9 rounded rounded-3 bg-light overflow-hidden">
-                            <?php
-                            if (has_post_thumbnail()) {
-                                $img_atr = wp_get_attachment_image_src(get_post_thumbnail_id(), 'medium');
-                                echo '<a href="' . get_the_permalink() . '"><img src="' . $img_atr[0] . '" alt="' . get_the_title() . '" loading="lazy"/></a>';
-                            } else {
-                                echo '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 60 60" style="background-color: #ececec;width: 100%;height: auto;enable-background:new 0 0 60 60;" xml:space="preserve" width="' . $width . '" height="' . $height . '"><g><g><path d="M55.201,15.5h-8.524l-4-10H17.323l-4,10H12v-5H6v5H4.799C2.152,15.5,0,17.652,0,20.299v29.368   C0,52.332,2.168,54.5,4.833,54.5h50.334c2.665,0,4.833-2.168,4.833-4.833V20.299C60,17.652,57.848,15.5,55.201,15.5z M8,12.5h2v3H8   V12.5z M58,49.667c0,1.563-1.271,2.833-2.833,2.833H4.833C3.271,52.5,2,51.229,2,49.667V20.299C2,18.756,3.256,17.5,4.799,17.5H6h6   h2.677l4-10h22.646l4,10h9.878c1.543,0,2.799,1.256,2.799,2.799V49.667z" data-original="#000000" class="active-path" data-old_color="#000000" fill="#5F7D95"/><path d="M30,14.5c-9.925,0-18,8.075-18,18s8.075,18,18,18s18-8.075,18-18S39.925,14.5,30,14.5z M30,48.5c-8.822,0-16-7.178-16-16   s7.178-16,16-16s16,7.178,16,16S38.822,48.5,30,48.5z" data-original="#000000" class="active-path" data-old_color="#000000" fill="#5F7D95"/><path d="M30,20.5c-6.617,0-12,5.383-12,12s5.383,12,12,12s12-5.383,12-12S36.617,20.5,30,20.5z M30,42.5c-5.514,0-10-4.486-10-10   s4.486-10,10-10s10,4.486,10,10S35.514,42.5,30,42.5z" data-original="#000000" class="active-path" data-old_color="#000000" fill="#5F7D95"/><path d="M52,19.5c-2.206,0-4,1.794-4,4s1.794,4,4,4s4-1.794,4-4S54.206,19.5,52,19.5z M52,25.5c-1.103,0-2-0.897-2-2s0.897-2,2-2   s2,0.897,2,2S53.103,25.5,52,25.5z" data-original="#000000" class="active-path" data-old_color="#000000" fill="#5F7D95"/></g></g> </svg>';
-                            } ?>
-                        </div>
+                        <?php echo velocitychild_post_thumbnail(null, 'large', '16x9', 'rounded rounded-3 bg-light'); ?>
                     </div>
                 </div>
                 <div class="col px-0">
@@ -652,16 +657,7 @@ function vdpost_grid($idcat, $limit)
         while ($myquery->have_posts()) :
             $myquery->the_post(); ?>
             <div class="<?php echo esc_attr($col_class); ?> px-md-2 p-2">
-                <div class="relate-thumb ratio ratio-16x9">
-                    <?php
-                    if (has_post_thumbnail()) {
-                        $img_atr = wp_get_attachment_image_src(get_post_thumbnail_id(), 'large');
-                        echo '<a href="' . get_the_permalink() . '"><img class="rounded rounded-2" src="' . $img_atr[0] . '" alt="' . get_the_title() . '" /></a>';
-                    } else {
-                        echo '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 60 60" style="background-color: #ececec;width: 100%;height: auto;enable-background:new 0 0 60 60;" xml:space="preserve" width="' . $width . '" height="' . $height . '"><g><g><path d="M55.201,15.5h-8.524l-4-10H17.323l-4,10H12v-5H6v5H4.799C2.152,15.5,0,17.652,0,20.299v29.368   C0,52.332,2.168,54.5,4.833,54.5h50.334c2.665,0,4.833-2.168,4.833-4.833V20.299C60,17.652,57.848,15.5,55.201,15.5z M8,12.5h2v3H8   V12.5z M58,49.667c0,1.563-1.271,2.833-2.833,2.833H4.833C3.271,52.5,2,51.229,2,49.667V20.299C2,18.756,3.256,17.5,4.799,17.5H6h6   h2.677l4-10h22.646l4,10h9.878c1.543,0,2.799,1.256,2.799,2.799V49.667z" data-original="#000000" class="active-path" data-old_color="#000000" fill="#5F7D95"/><path d="M30,14.5c-9.925,0-18,8.075-18,18s8.075,18,18,18s18-8.075,18-18S39.925,14.5,30,14.5z M30,48.5c-8.822,0-16-7.178-16-16   s7.178-16,16-16s16,7.178,16,16S38.822,48.5,30,48.5z" data-original="#000000" class="active-path" data-old_color="#000000" fill="#5F7D95"/><path d="M30,20.5c-6.617,0-12,5.383-12,12s5.383,12,12,12s12-5.383,12-12S36.617,20.5,30,20.5z M30,42.5c-5.514,0-10-4.486-10-10   s4.486-10,10-10s10,4.486,10,10S35.514,42.5,30,42.5z" data-original="#000000" class="active-path" data-old_color="#000000" fill="#5F7D95"/><path d="M52,19.5c-2.206,0-4,1.794-4,4s1.794,4,4,4s4-1.794,4-4S54.206,19.5,52,19.5z M52,25.5c-1.103,0-2-0.897-2-2s0.897-2,2-2   s2,0.897,2,2S53.103,25.5,52,25.5z" data-original="#000000" class="active-path" data-old_color="#000000" fill="#5F7D95"/></g></g> </svg>';
-                    }
-                    ?>
-                </div>
+                <?php echo velocitychild_post_thumbnail(null, 'large', '16x9', 'rounded rounded-2 bg-light'); ?>
                 <span class="fw-bold"><a href="<?php echo get_the_permalink(); ?>"><?php echo get_the_title(); ?></a></span>
             </div>
 <?php

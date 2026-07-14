@@ -13,7 +13,7 @@ defined('ABSPATH') || exit;
 
 get_header();
 
-$container = velocitytheme_option('justg_container_type', 'container');
+$container = velocitychild_get_option('justg_container_type', 'container');
 ?>
 
 <div class="wrapper" id="archive-wrapper">
@@ -31,7 +31,10 @@ $container = velocitytheme_option('justg_container_type', 'container');
                 ?>
                     <header class="page-header block-primary">
                         <?php
-                        the_archive_title('<h1 class="page-title text-uppercase">', '</h1>');
+                        $archive_title = (is_category() || is_tag() || is_tax())
+                            ? single_term_title('', false)
+                            : get_the_archive_title();
+                        echo '<h1 class="page-title text-uppercase">' . esc_html($archive_title) . '</h1>';
                         the_archive_description('<div class="taxonomy-description">', '</div>');
                         ?>
                     </header><!-- .page-header -->

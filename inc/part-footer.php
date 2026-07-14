@@ -20,13 +20,12 @@
         ?>
     </div>
 
-    <div class="row align-items-center text-center">
-        <div class="site-info text-muted">
-            <small>
-                © <?php echo date("Y"); ?> <?php echo get_bloginfo('name'); ?>. All Rights Reserved.
-                <br>
+    <div class="row align-items-center text-center pb-3">
+        <div class="site-info text-muted small">
+            © <?php echo date("Y"); ?> <?php echo get_bloginfo('name'); ?>. All Rights Reserved.
+            <div class="opacity-50">
                 Design by <a class="text-muted" href="https://velocitydeveloper.com" target="_blank" rel="noopener noreferrer">Velocity Developer</a>.
-            </small>
+            </div>
         </div>
         <!-- .site-info -->
     </div>

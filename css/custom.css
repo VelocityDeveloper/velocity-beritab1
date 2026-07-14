@@ -1,9 +1,60 @@
 :root {
     --color-theme: #740106;
+    --bs-primary: var(--color-theme);
+    --bs-primary-bg-subtle: color-mix(in srgb, var(--color-theme) 20%, white);
+    --bs-primary-border-subtle: color-mix(in srgb, var(--color-theme) 40%, white);
+    --bs-primary-text-emphasis: color-mix(in srgb, var(--color-theme) 70%, black);
+    --bs-focus-ring-color: color-mix(in srgb, var(--color-theme) 25%, transparent);
     --bs-body-font-size: .85rem !important;
-    --bs-body-font-family: Arial, Helvetica, sans-serif !important;
+    --bs-body-font-family: "Inter", Arial, Helvetica, sans-serif !important;
     --bs-link-color: #333333 !important;
     --bs-link-hover-color: var(--color-theme) !important;
+}
+.text-primary,
+.link-primary {
+    color: var(--color-theme) !important;
+}
+.link-primary:hover,
+.link-primary:focus {
+    color: color-mix(in srgb, var(--color-theme) 80%, black) !important;
+}
+.bg-primary,
+.text-bg-primary {
+    background-color: var(--color-theme) !important;
+}
+.border-primary {
+    border-color: var(--color-theme) !important;
+}
+.btn-primary {
+    --bs-btn-bg: var(--color-theme);
+    --bs-btn-border-color: var(--color-theme);
+    --bs-btn-hover-bg: color-mix(in srgb, var(--color-theme) 85%, black);
+    --bs-btn-hover-border-color: color-mix(in srgb, var(--color-theme) 80%, black);
+    --bs-btn-active-bg: color-mix(in srgb, var(--color-theme) 80%, black);
+    --bs-btn-active-border-color: color-mix(in srgb, var(--color-theme) 75%, black);
+    --bs-btn-disabled-bg: var(--color-theme);
+    --bs-btn-disabled-border-color: var(--color-theme);
+}
+.btn-outline-primary {
+    --bs-btn-color: var(--color-theme);
+    --bs-btn-border-color: var(--color-theme);
+    --bs-btn-hover-bg: var(--color-theme);
+    --bs-btn-hover-border-color: var(--color-theme);
+    --bs-btn-active-bg: var(--color-theme);
+    --bs-btn-active-border-color: var(--color-theme);
+    --bs-btn-disabled-color: var(--color-theme);
+}
+.pagination {
+    --bs-pagination-color: var(--color-theme) !important;
+    --bs-pagination-hover-color: color-mix(in srgb, var(--color-theme) 80%, black) !important;
+    --bs-pagination-hover-bg: color-mix(in srgb, var(--color-theme) 10%, white) !important;
+    --bs-pagination-hover-border-color: color-mix(in srgb, var(--color-theme) 30%, white) !important;
+    --bs-pagination-focus-color: color-mix(in srgb, var(--color-theme) 80%, black) !important;
+    --bs-pagination-focus-bg: color-mix(in srgb, var(--color-theme) 10%, white) !important;
+    --bs-pagination-focus-box-shadow: 0 0 0 .25rem color-mix(in srgb, var(--color-theme) 25%, transparent) !important;
+    --bs-pagination-active-color: #fff !important;
+    --bs-pagination-active-bg: var(--color-theme) !important;
+    --bs-pagination-active-border-color: var(--color-theme) !important;
 }
 :root[data-bs-theme=light] body {
     color: var(--bs-dark);
@@ -27,7 +78,12 @@
 small{
     font-size: .7rem !important;
 }
-
+.page-article {
+    gap: 0.3rem !important;
+}
+.site-footer p {
+    margin-bottom: 0.5rem;
+}
 .gradient-theme {
 	background-image: linear-gradient(to right,rgba(0,0,0,0),rgba(0,0,0,.2));
 }
@@ -127,26 +183,25 @@ small{
 
 /*Cari*/
 .pencarian {
-	text-align: -webkit-center;
+    display: flex;
+    justify-content: center;
 }
 .search-form {
-    position: relative;
-	border-radius: 20px;
-	max-width: 400px;
-	padding: 8px 10px;
-	border: 1px solid #eee;
-	background-color: #fff;
+    width: 100%;
+    max-width: 500px;
 }
-.search-form input {
-	padding: 0 !important;
-	border: none !important;
+.search-form .form-control {
+    min-width: 0;
+    border-color: #dee2e6;
+    border-radius: 50rem 0 0 50rem !important;
+    padding-left: 1rem;
 }
-.btn-search {
-	position: absolute;
-	right: 0;
-	top: 0;
-	height: 100%;
-    border-radius: 0 20px 20px 0 !important;
+.search-form .btn-search {
+    position: static;
+    height: auto;
+    border-radius: 0 50rem 50rem 0 !important;
+    padding-right: 1rem;
+    padding-left: 1rem;
 }
 
 /* cari2 */
@@ -154,15 +209,30 @@ small{
     position: relative;
 }
 .vdcari .tombols {
-	padding: 4px 15px;
-	display: inline-block;
-	cursor: pointer;
-	color:#666;
-	background: transparent;
-	border: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    color: #495057;
+    background: transparent;
+    border: 0;
+    border-radius: 50%;
+    cursor: pointer;
+    line-height: 1;
+    transition: color .2s ease, background-color .2s ease;
 }
-.vdcari .tombols i {
-	font-size:20px;
+.vdcari .tombols:hover,
+.vdcari .tombols:focus-visible {
+    color: var(--color-theme);
+    background-color: rgba(0, 0, 0, .05);
+    outline: none;
+}
+.vdcari .tombols svg {
+    display: block;
+    width: 20px;
+    height: 20px;
 }
 .vdcari .search-head{
     display:none;
@@ -280,12 +350,7 @@ small{
     position: relative;
 }
 /* end menu style */
-@media only screen and (max-width:1300px){
-    .iklanfloating {
-        display: none;
-    }
-}
-.iklanfloating {
+.floating-media {
     position: fixed;
     top: 0 !important;
     left: 0;
@@ -293,20 +358,59 @@ small{
     max-height: 100vh;
     transition: all .5s;
 }
-.iklanfloating[data-pos='left'] {
+.floating-media img {
+    width: auto;
+    max-width: 200px;
+    height: auto;
+}
+@media only screen and (min-width: 1300px) and (max-width: 1350px) {
+    .floating-media img {
+        max-width: 170px;
+    }
+}
+@media only screen and (max-width: 1299.98px) {
+    .floating-media {
+        display: none;
+    }
+    .floating-media img {
+        max-width: 170px;
+    }
+}
+.floating-media[data-pos='left'] {
     right: 0;
     left: initial;
 }
-.iklanfloating[data-pos='right'] {
+.floating-media[data-pos='right'] {
     left: 0;
     right: initial;
 }
-.iklanfloating .close-iklan {
-    font-size: .6rem;
-    display: inline-block;
-    padding: 0.15rem 0.5rem;
+.floating-media .dismiss-media {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    color: #212529;
+    background-color: rgba(255, 255, 255, .9);
+    border: 0;
+    border-radius: 50%;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, .25);
+    cursor: pointer;
+    transform: translate(35%, -35%);
+    z-index: 1;
 }
-body.fl-builder-edit .iklanfloating {
+.floating-media .dismiss-media:hover,
+.floating-media .dismiss-media:focus-visible {
+    color: #fff;
+    background-color: #212529;
+    outline: none;
+}
+.floating-media .dismiss-media svg {
+    width: 18px;
+    height: 18px;
+}
+body.fl-builder-edit .floating-media {
     display: none !important;
 }
 .issticky {
@@ -374,6 +478,7 @@ body.fl-builder-edit .iklanfloating {
 	display: table-cell !important;
 	text-align: center !important;
 }
+
 /* end widget */
 
 @keyframes anim {
